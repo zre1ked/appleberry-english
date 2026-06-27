@@ -1,0 +1,43 @@
+<div class="contacts-page">
+    <section class="contacts">
+        <div class="contacts__container">
+            <h1 class="contacts__title">Обратная связь</h1>
+            
+            <div class="contacts__content">
+                <div class="contacts__info">
+                    <h2 class="contacts__subtitle">Задайте мне вопрос</h2>
+                    <p class="contacts__text"><strong>Ольга Литовченко</strong></p>
+                    <p class="contacts__text">📞 Телефон: <a href="tel:+79222574767">8 (922) 257-47-67</a></p>
+                    <p class="contacts__text">📧 Email: <a href="mailto:olgasurgut85@mail.ru">olgasurgut85@mail.ru</a></p>
+                    
+                    <div class="contacts__social">
+                        <a href="https://vk.ru/appleberryenglishschool" target="_blank" class="contacts__vk-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.958 17.157h-2.163c-1.697 0-2.218-1.347-5.263-4.458-.996-1.023-1.45-1.158-1.709-1.158-.348 0-.437.1-.437.575v3.882c0 .407-.13.65-1.204.65h-1.99c-1.64 0-2.162-1.215-2.162-2.162 0-2.052 2.338-6.37 5.15-9.01 2.6-2.44 5.8-2.55 5.8-1.37 0 .424-.273 1.74-.273 1.74s-.71 4.718-.87 5.374c-.19.79-.63.79-.87.79-.22 0-1.66-1.08-2.66-2.02-.76-.72-.97-.94-1.19-.94-.13 0-.22.06-.22.36 0 .93 1.19 3.23 2.38 4.94 1.19 1.71 2.55 2.68 4.08 2.68h1.63c.43 0 .65-.18.65-.54 0-.97-1.08-2.6-1.08-2.6s-.33-.4-.11-.65c.19-.24.65-.18 1.08 0 .43.18 2.77 1.79 3.25 2.34.48.55.48 1.07.48 1.07s0 .38-.22.38z"/>
+                            </svg>
+                            Сообщество VK
+                        </a>
+                        <a href="https://vk.ru/appleberrylitovchenko" target="_blank" class="contacts__vk-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.958 17.157h-2.163c-1.697 0-2.218-1.347-5.263-4.458-.996-1.023-1.45-1.158-1.709-1.158-.348 0-.437.1-.437.575v3.882c0 .407-.13.65-1.204.65h-1.99c-1.64 0-2.162-1.215-2.162-2.162 0-2.052 2.338-6.37 5.15-9.01 2.6-2.44 5.8-2.55 5.8-1.37 0 .424-.273 1.74-.273 1.74s-.71 4.718-.87 5.374c-.19.79-.63.79-.87.79-.22 0-1.66-1.08-2.66-2.02-.76-.72-.97-.94-1.19-.94-.13 0-.22.06-.22.36 0 .93 1.19 3.23 2.38 4.94 1.19 1.71 2.55 2.68 4.08 2.68h1.63c.43 0 .65-.18.65-.54 0-.97-1.08-2.6-1.08-2.6s-.33-.4-.11-.65c.19-.24.65-.18 1.08 0 .43.18 2.77 1.79 3.25 2.34.48.55.48 1.07.48 1.07s0 .38-.22.38z"/>
+                            </svg>
+                            Личная страница
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contacts__links">
+                    <h2 class="contacts__subtitle">Полезные ссылки</h2>
+                    <ul class="contacts__links-list">
+                        <li *ngFor="let link of links" class="contacts__link-item">
+                            <a [href]="link.url" target="_blank" class="contacts__link">
+                                <span class="contacts__link-icon">{{ link.icon }}</span>
+                                <span class="contacts__link-text">{{ link.title }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

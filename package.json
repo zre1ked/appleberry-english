@@ -1,0 +1,38 @@
+{
+  "name": "teacher-site-angular",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "dev": "ng serve",
+    "dev:all": "node server.js & ng serve",
+    "start": "node server-full.js",
+    "build": "ng build --configuration production",
+    "build:deploy": "ng build --configuration production && npm start"
+  },
+  "private": true,
+  "packageManager": "npm@11.13.0",
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.1",
+    "@angular/cli": "^22.0.1",
+    "@angular/compiler-cli": "^22.0.0",
+    "express": "^5.2.1",
+    "http-proxy-middleware": "^4.1.1",
+    "jsdom": "^28.0.0",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}

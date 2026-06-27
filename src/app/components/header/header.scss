@@ -1,0 +1,134 @@
+@use '../../../styles/variables' as *;
+
+.header {
+    background-color: $white;
+    box-shadow: 0 2px 8px rgba($accent-color, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
+    &__container {
+        max-width: $container-max-width;
+        margin: 0 auto;
+        padding: $spacing-md $container-padding;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    &__logo {
+        &-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        &-text {
+            font-size: $font-size-xl;
+            font-weight: bold;
+            color: $accent-color;
+        }
+    }
+    
+    &__burger {
+        display: none;
+        flex-direction: column;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: $spacing-sm;
+        
+        &-line {
+            width: 25px;
+            height: 3px;
+            background-color: $accent-color;
+            margin: 2px 0;
+            transition: $transition-medium;
+        }
+        
+        &.active &-line {
+            &:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            &:nth-child(2) {
+                opacity: 0;
+            }
+            &:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+        }
+    }
+    
+    &__nav {
+        &-list {
+            display: flex;
+            list-style: none;
+            gap: $spacing-lg;
+        }
+        
+        &-link {
+            text-decoration: none;
+            color: $text-color;
+            font-weight: 500;
+            transition: color $transition-fast;
+            position: relative;
+            cursor: pointer;
+            
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: $primary-color;
+                transition: width $transition-medium;
+            }
+            
+            &:hover {
+                color: $primary-color;
+            }
+            
+            &.active {
+                color: $accent-color;
+                
+                &::after {
+                    width: 100%;
+                    background-color: $accent-color;
+                }
+            }
+        }
+    }
+    
+    @media (max-width: $tablet) {
+        &__burger {
+            display: flex;
+        }
+        
+        &__nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background-color: $white;
+            box-shadow: $shadow-lg;
+            transition: right $transition-medium;
+            padding: $spacing-xl $spacing-lg;
+            
+            &.active {
+                right: 0;
+            }
+            
+            &-list {
+                flex-direction: column;
+                gap: $spacing-md;
+            }
+            
+            &-link {
+                font-size: $font-size-lg;
+            }
+        }
+    }
+}

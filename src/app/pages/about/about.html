@@ -1,0 +1,115 @@
+<div class="about-page">
+    <section class="about">
+        <div class="about__container">
+            <h1 class="about__title">Об учителе</h1>
+            
+            <div class="about__content">
+                <div class="about__image">
+                    <img src="assets/images/teacher-photo.webp" alt="Ольга Литовченко">
+                </div>
+                <div class="about__info">
+                    <h2 class="about__subtitle">Ольга Литовченко</h2>
+                    <p class="about__position">Учитель английского языка</p>
+                    
+                    <div class="about__quotes-inline">
+                        <div *ngFor="let quote of quotes" class="about__quote-inline">
+                            <p class="about__quote-inline-text">«{{ quote.text }}»</p>
+                            <p class="about__quote-inline-author">— {{ quote.author }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about__details">
+                <div class="about__card">
+                    <h3 class="about__card-title">Образование</h3>
+                    <div class="about__education">
+                        <div class="about__education-item">
+                            <p class="about__education-name">Сургутский государственный университет</p>
+                            <p class="about__education-desc">Лингвист, преподаватель по специальности: теория и методика преподавания иностранных языков и культур (английский, немецкий и французский языки)</p>
+                        </div>
+                        <div class="about__education-item">
+                            <p class="about__education-name">Международный сертификат преподавания английского языка учащимся средней школы (с отличием)</p>
+                            <p class="about__education-desc">Certificate of English Language Teaching - Secondary (MERIT)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about__card">
+                    <h3 class="about__card-title">Трудовая деятельность</h3>
+                    <div class="about__timeline">
+                        <div class="about__timeline-item">
+                            <span class="about__timeline-year">2024 – н.в.</span>
+                            <span class="about__timeline-text">МБОУ школа «Перспектива»</span>
+                        </div>
+                        <div class="about__timeline-item">
+                            <span class="about__timeline-year">2011 – 2024</span>
+                            <span class="about__timeline-text">МБОУ СОШ №10 с УИОП</span>
+                        </div>
+                        <div class="about__timeline-item">
+                            <span class="about__timeline-year">2007 – 2011</span>
+                            <span class="about__timeline-text">Сургутская школа изучения иностранных языков (СШИИЯ)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about__card">
+                    <h3 class="about__card-title">Педагогическое кредо</h3>
+                    <p class="about__card-text">«Английский — это не просто набор правил, а ключ к целому миру. Моя миссия — не просто дать знания, а вдохновить, снять языковой барьер и помочь каждому ученику обрести свой уверенный голос».</p>
+                </div>
+            </div>
+
+            <div class="about__achievements">
+                <h2 class="about__achievements-title">Достижения</h2>
+                
+                <div class="about__achievements-loading" *ngIf="isLoadingAchievements">
+                    <div class="about__spinner"></div>
+                    <p>Загрузка достижений...</p>
+                </div>
+                
+                <div class="about__achievements-list" *ngIf="!isLoadingAchievements && achievements.length > 0">
+                    <div *ngFor="let achievement of achievements" class="about__achievement-item" (click)="openAchievement(achievement)">
+                        <div class="about__achievement-icon">
+                            <img *ngIf="!isEmoji(achievement)" [src]="getAchievementIcon(achievement)" alt="Фото достижения">
+                            <span *ngIf="isEmoji(achievement)" class="about__achievement-emoji">{{ getAchievementIcon(achievement) }}</span>
+                        </div>
+                        <div class="about__achievement-info">
+                            <p class="about__achievement-name">{{ achievement.shortText }}</p>
+                            <span class="about__achievement-year">{{ achievement.date }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about__achievements-empty" *ngIf="!isLoadingAchievements && achievements.length === 0">
+                    <p>Достижения скоро появятся. Следите за обновлениями в VK!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="post-modal" *ngIf="selectedAchievement" (click)="closeAchievement()">
+        <div class="post-modal__content" (click)="$event.stopPropagation()">
+            <button class="post-modal__close" (click)="closeAchievement()">&times;</button>
+            <div class="post-modal__gallery" *ngIf="selectedAchievement.images.length > 0">
+                <div class="post-modal__image-container">
+                    <button class="post-modal__nav post-modal__prev" (click)="prevImage()" *ngIf="selectedAchievement.images.length > 1">‹</button>
+                    <img [src]="selectedAchievement.images[selectedImageIndex]" alt="Фото достижения">
+                    <button class="post-modal__nav post-modal__next" (click)="nextImage()" *ngIf="selectedAchievement.images.length > 1">›</button>
+                </div>
+                <div class="post-modal__dots" *ngIf="selectedAchievement.images.length > 1">
+                    <span *ngFor="let img of selectedAchievement.images; let i = index" 
+                          class="post-modal__dot" 
+                          [class.active]="i === selectedImageIndex"
+                          (click)="selectImage(i)"></span>
+                </div>
+            </div>
+            <div class="post-modal__scrollable">
+                <div class="post-modal__body">
+                    <time class="post-modal__date">{{ selectedAchievement.date }}</time>
+                    <div class="post-modal__text">{{ selectedAchievement.text }}</div>
+                    <a [href]="selectedAchievement.url" target="_blank" class="post-modal__link">Открыть в VK →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

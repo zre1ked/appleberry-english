@@ -1,0 +1,27 @@
+// Кастомный скроллбар
+@mixin custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #D7CCC8;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        
+        &:hover {
+            background: #BCAAA4;
+        }
+    }
+
+    // Firefox
+    scrollbar-width: thin;
+    scrollbar-color: #D7CCC8 transparent;
+}

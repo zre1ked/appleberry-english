@@ -1,0 +1,41 @@
+<div class="gallery-page">
+    <section class="gallery">
+        <div class="gallery__container">
+            <h1 class="gallery__title">Галерея</h1>
+            
+            <div class="gallery__disclaimer">
+                <p>Все фото детей, персональные данные (имя, фамилия, класс), их работы размещены на сайте с письменного разрешения родителей (законных представителей).</p>
+            </div>
+
+            <div class="gallery__tabs">
+                <button class="gallery__tab" [class.active]="activeTab === 'main'" (click)="setTab('main')">
+                    📸 Основное
+                </button>
+                <button class="gallery__tab" [class.active]="activeTab === 'students'" (click)="setTab('students')">
+                    🌟 Достижения учащихся
+                </button>
+            </div>
+
+            <div class="gallery__loading" *ngIf="isLoading">
+                <div class="gallery__spinner"></div>
+                <p>Загрузка...</p>
+            </div>
+
+            <div class="gallery__grid" *ngIf="!isLoading && currentImages.length > 0">
+                <div *ngFor="let image of currentImages" class="gallery__item" (click)="openLightbox(image)">
+                    <img [src]="image.image" [alt]="image.shortText" class="gallery__image">
+                    <div class="gallery__item-caption">{{ image.shortText }}</div>
+                </div>
+            </div>
+
+            <div class="gallery__empty" *ngIf="!isLoading && currentImages.length === 0">
+                <p>Фотографии скоро появятся. Следите за обновлениями в VK!</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="lightbox" [class.active]="isLightboxOpen" (click)="closeLightbox()">
+        <span class="lightbox__close" (click)="closeLightbox()">&times;</span>
+        <img class="lightbox__image" [src]="selectedImage?.image" [alt]="selectedImage?.shortText" (click)="$event.stopPropagation()">
+    </div>
+</div>

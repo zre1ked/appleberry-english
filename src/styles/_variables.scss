@@ -1,0 +1,57 @@
+// Colors - Новая цветовая гамма
+$primary-color: #5B9BD5;        // Голубой
+$primary-light: #E8F4FD;        // Светло-голубой
+$primary-dark: #3A7BBF;         // Тёмно-голубой
+$secondary-color: #FFF8F0;      // Молочный
+$accent-color: #5D4037;         // Тёмно-коричневый (шоколад)
+$accent-light: #8D6E63;         // Светло-коричневый
+$accent-dark: #3E2723;          // Очень тёмный коричневый
+$text-color: #333333;
+$text-light: #666666;
+$white: #ffffff;
+$black: #000000;
+$border-color: #E8E0D5;         // Бежевый бордер
+
+// Typography
+$font-primary: 'Arial', sans-serif;
+$font-size-base: 16px;
+$font-size-sm: 14px;
+$font-size-lg: 18px;
+$font-size-xl: 24px;
+$font-size-2xl: 32px;
+$font-size-3xl: 48px;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+$spacing-3xl: 64px;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large-desktop: 1200px;
+
+// Container
+$container-max-width: 1200px;
+$container-padding: 16px;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+$border-radius-round: 50%;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(93, 64, 55, 0.1);
+$shadow-md: 0 4px 8px rgba(93, 64, 55, 0.15);
+$shadow-lg: 0 8px 16px rgba(93, 64, 55, 0.2);

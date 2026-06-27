@@ -1,0 +1,70 @@
+<div class="home-page">
+    <section class="emblems">
+        <div class="emblems__container">
+            <img src="assets/images/emblem-rf.webp" alt="Герб РФ" class="emblems__item">
+            <img src="assets/images/emblem-hmao.webp" alt="Герб ХМАО" class="emblems__item">
+            <img src="assets/images/emblem-surgut.webp" alt="Герб Сургута" class="emblems__item">
+            <img src="assets/images/emblem-department.webp" alt="Департамент образования" class="emblems__item">
+            <img src="assets/images/emblem-school.webp" alt="Школа" class="emblems__item">
+        </div>
+    </section>
+
+    <section class="hero">
+        <div class="hero__background"></div>
+        <div class="hero__container">
+            <div class="hero__content animate-fade-in">
+                <h1 class="hero__title">Ольга Литовченко</h1>
+                <p class="hero__subtitle">Учитель английского языка</p>
+                <p class="hero__quote">«Только тот сможет стать настоящим учителем, кто никогда не забывает, что он и сам был ребенком»</p>
+                <p class="hero__author">Василий Сухомлинский</p>
+                <div class="hero__buttons">
+                    <a (click)="scrollToMediaEssay()" class="hero__button">Смотреть медиаэссе</a>
+                    <a routerLink="/contacts" class="hero__button hero__button--help">Помощь</a>
+                </div>
+            </div>
+            <div class="hero__image animate-slide-in">
+                <img src="assets/images/teacher-photo.webp" alt="Ольга Литовченко" class="hero__avatar">
+            </div>
+        </div>
+    </section>
+    
+    <section class="welcome">
+        <div class="welcome__container">
+            <h2 class="welcome__title">Добро пожаловать!</h2>
+            <div class="welcome__text">
+                <p>Здравствуйте! Добро пожаловать на мой сайт.</p>
+                <p>Меня зовут Литовченко Ольга Валерьевна. Я преподаватель английского языка, и за плечами у меня 18 лет педагогического стажа.</p>
+                <p>За эти годы я помогла сотням учеников полюбить английский, преодолеть языковой барьер и достичь своих целей: от успешной сдачи экзаменов до свободного общения в путешествиях и уверенного использования языка в бизнесе.</p>
+                <p>Моя философия проста: английский — это не набор сложных правил для зубрежки, а живой инструмент для общения и новых возможностей. На моих занятиях царит атмосфера поддержки, где не страшно сделать ошибку, потому что именно так рождается уверенность.</p>
+                <p>Я буду рада стать вашим проводником в мир английского языка. Давайте вместе составим план, который подойдет именно вам!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="media-essay" id="media-essay">
+        <div class="media-essay__container">
+            <h2 class="media-essay__title">Медиаэссе</h2>
+            <p class="media-essay__subtitle">Почему я стала учителем</p>
+            <div class="media-essay__video">
+                <iframe 
+                    src="https://vk.com/video_ext.php?oid=ID_ВЛАДЕЛЬЦА&id=ID_ВИДЕО&hd=2" 
+                    width="100%" 
+                    height="500" 
+                    frameborder="0" 
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="help" id="help">
+        <div class="help__container">
+            <h2 class="help__title">Помощь</h2>
+            <p class="help__text">Если вам нужна помощь или консультация, перейдите в раздел «Обратная связь».</p>
+            <div class="help__buttons">
+                <a routerLink="/contacts" class="help__button">📧 Перейти в обратную связь</a>
+            </div>
+        </div>
+    </section>
+</div>
