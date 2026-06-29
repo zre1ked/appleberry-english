@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { PreloadService } from './services/preload.service';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,13 @@ import { Component } from '@angular/core';
   standalone: false,
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit {
   title = 'teacher-site-angular';
+
+  constructor(private preloadService: PreloadService) {}
+
+  ngOnInit() {
+    // Запускаем предзагрузку при старте приложения
+    this.preloadService.preload();
+  }
 }

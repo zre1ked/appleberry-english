@@ -31,7 +31,6 @@ export class VkService {
     let offset = 0;
     const batchSize = 100;
     
-    // Получаем общее количество
     const first = await this.callApi(0, 1);
     if (!first?.response?.count) return [];
     
@@ -53,12 +52,9 @@ export class VkService {
     return all.filter(p => p.hashtags.includes(hashtag));
   }
 
-  // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
-
   private async callApi(offset: number, count: number): Promise<any> {
     const url = `https://api.vk.com/method/wall.get?owner_id=${this.GROUP_ID}&offset=${offset}&count=${count}&filter=all&access_token=${this.TOKEN}&v=${this.VERSION}`;
     
-    // Пробуем JSONP
     try {
       const data = await this.jsonp(url);
       if (data?.response) return data;
@@ -66,7 +62,6 @@ export class VkService {
       console.warn('JSONP failed, trying proxy');
     }
     
-    // Пробуем прокси
     try {
       const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
       return await res.json();
@@ -111,19 +106,24 @@ export class VkService {
     const result: VkPost[] = [];
 
     for (const item of items) {
-      // Пропускаем дубликаты
       if (seen.has(item.id)) continue;
       seen.add(item.id);
 
-      // Пропускаем посты БЕЗ текста И БЕЗ вложений
       const text = (item.text || '').trim();
       const hasAttachments = item.attachments && item.attachments.length > 0;
+      
+      // Пропускаем только полностью пустые посты (без текста и без вложений)
       if (!text && !hasAttachments) continue;
 
       const images = this.extractImages(item.attachments);
       const videos = this.extractVideos(item.attachments);
       const files = this.countFiles(item.attachments);
-      const hashtags = this.extractHashtags(text);
+      
+      let hashtags = this.extractHashtags(text);
+      // Посты с вложениями но без хештегов → добавляем #Блог
+      if (hashtags.length === 0 && hasAttachments) {
+        hashtags = ['Блог'];
+      }
 
       result.push({
         id: item.id,

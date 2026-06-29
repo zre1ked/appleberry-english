@@ -8,6 +8,13 @@ import { VkService } from '../../services/vk.service';
   styleUrl: './blog.scss'
 })
 export class Blog implements OnInit {
+  private allBlogPosts: any[] = [];
+  private allColleaguesPosts: any[] = [];
+  private allParentsPosts: any[] = [];
+  private allStudentsPosts: any[] = [];
+  private allInclusivePosts: any[] = [];
+  private allNewsPosts: any[] = [];
+  
   blogPosts: any[] = [];
   colleaguesPosts: any[] = [];
   parentsPosts: any[] = [];
@@ -18,16 +25,19 @@ export class Blog implements OnInit {
   isLoading = true;
   activeTab: 'blog' | 'colleagues' | 'parents' | 'students' | 'inclusive' | 'news' = 'blog';
   
+  private pageSize = 6;
+  private loadingMore = false;
+  
   selectedPost: any = null;
   selectedImageIndex = 0;
 
   tabs = [
-    { id: 'blog' as const, label: 'Блог', hashtag: 'Блог', icon: '📝' },
-    { id: 'colleagues' as const, label: 'Коллегам', hashtag: 'Коллегам', icon: '👥' },
-    { id: 'parents' as const, label: 'Родителям', hashtag: 'Родителям', icon: '👨‍👩‍👧‍👦' },
-    { id: 'students' as const, label: 'Ученикам', hashtag: 'Ученикам', icon: '🎓' },
-    { id: 'inclusive' as const, label: 'Особенные дети', hashtag: 'ОсобенныеДети', icon: '💙' },
-    { id: 'news' as const, label: 'Новости', hashtag: '', icon: '📰' }
+    { id: 'blog' as const, label: 'Блог', icon: '📝' },
+    { id: 'colleagues' as const, label: 'Коллегам', icon: '👥' },
+    { id: 'parents' as const, label: 'Родителям', icon: '👨‍👩‍👧‍👦' },
+    { id: 'students' as const, label: 'Ученикам', icon: '🎓' },
+    { id: 'inclusive' as const, label: 'Особенные дети', icon: '💙' },
+    { id: 'news' as const, label: 'Новости', icon: '📰' }
   ];
 
   constructor(private cdr: ChangeDetectorRef, private vkService: VkService) {}
@@ -41,30 +51,29 @@ export class Blog implements OnInit {
     this.cdr.detectChanges();
     
     try {
-      const allPosts = await this.vkService.getAllPosts();
+      const [blog, colleagues, parents, students, inclusive, news] = await Promise.all([
+        this.vkService.getPostsByHashtag('Блог'),
+        this.vkService.getPostsByHashtag('Коллегам'),
+        this.vkService.getPostsByHashtag('Родителям'),
+        this.vkService.getPostsByHashtag('Ученикам'),
+        this.vkService.getPostsByHashtag('ОсобенныеДети'),
+        this.loadNews()
+      ]);
       
-      console.log('=== ALL POSTS FROM VK ===');
-      console.log('Total:', allPosts.length);
+      this.allBlogPosts = blog;
+      this.allColleaguesPosts = colleagues;
+      this.allParentsPosts = parents;
+      this.allStudentsPosts = students;
+      this.allInclusivePosts = inclusive;
+      this.allNewsPosts = news;
       
-      const blogPosts = allPosts.filter(p => p.hashtags.includes('Блог'));
-      console.log('Blog posts:', blogPosts.length);
+      this.blogPosts = blog.slice(0, this.pageSize);
+      this.colleaguesPosts = colleagues.slice(0, this.pageSize);
+      this.parentsPosts = parents.slice(0, this.pageSize);
+      this.studentsPosts = students.slice(0, this.pageSize);
+      this.inclusivePosts = inclusive.slice(0, this.pageSize);
+      this.newsPosts = news.slice(0, this.pageSize);
       
-      blogPosts.forEach((p, i) => {
-        console.log(`Blog post ${i}:`, {
-          id: p.id,
-          text: p.text?.substring(0, 50),
-          hashtags: p.hashtags,
-          hasImage: p.hasImage,
-          hasFiles: p.hasFiles
-        });
-      });
-      
-      this.blogPosts = blogPosts;
-      this.colleaguesPosts = allPosts.filter(p => p.hashtags.includes('Коллегам'));
-      this.parentsPosts = allPosts.filter(p => p.hashtags.includes('Родителям'));
-      this.studentsPosts = allPosts.filter(p => p.hashtags.includes('Ученикам'));
-      this.inclusivePosts = allPosts.filter(p => p.hashtags.includes('ОсобенныеДети'));
-      this.newsPosts = await this.loadNews();
     } catch (err) {
       console.error('Error loading posts:', err);
     }
@@ -74,66 +83,63 @@ export class Blog implements OnInit {
   }
 
   async loadNews(): Promise<any[]> {
-    console.log('Loading news...');
-    
     try {
-      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://admsurgut.ru/novosti/');
-      const response = await fetch(proxyUrl);
-      const html = await response.text();
-      
-      console.log('HTML loaded, length:', html.length);
-      
       const posts: any[] = [];
+      const maxPages = 5;
       
-      const allLinksRegex = /<a[^>]*href="([^"]*)"[^>]*>([^<]{15,})<\/a>/gi;
-      let match;
-      
-      while ((match = allLinksRegex.exec(html)) !== null) {
-        const href = match[1];
-        const text = match[2].trim();
+      for (let page = 1; page <= maxPages; page++) {
+        const pageUrl = page === 1 
+          ? 'https://admsurgut.ru/novosti/' 
+          : `https://admsurgut.ru/novosti/?PAGEN_1=${page}`;
         
-        if (text.length > 20 && !text.includes('window') && !text.includes('function')) {
-          const fullUrl = href.startsWith('http') ? href : 'https://admsurgut.ru' + href;
+        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(pageUrl);
+        const response = await fetch(proxyUrl);
+        const html = await response.text();
+        
+        const cards = html.split('news-main-card__content');
+        
+        for (let i = 1; i < cards.length; i++) {
+          const card = cards[i];
+          const dateMatch = card.match(/news-main-card__date">([^<]*)</);
+          const titleMatch = card.match(/news-main-card__title">([^<]*)</);
+          const prevBlock = cards[i - 1];
+          const linkMatch = prevBlock.match(/href="(\/novosti\/detail\.php\?ID=\d+)"/);
+          const imgMatch = prevBlock.match(/news-main-card__image"\s+src="([^"]*)"/);
           
-          if (!posts.find(p => p.url === fullUrl)) {
+          if (titleMatch && dateMatch) {
+            const image = imgMatch ? (imgMatch[1].startsWith('http') ? imgMatch[1] : 'https://admsurgut.ru' + imgMatch[1]) : '';
             posts.push({
               id: Math.random(),
-              text: '',
-              shortText: text,
-              date: '',
-              image: '',
-              images: [],
-              hasImage: false,
-              hasVideos: false,
-              url: fullUrl,
-              isLong: false,
-              hashtags: []
+              text: titleMatch[1].trim(),
+              shortText: titleMatch[1].trim(),
+              date: dateMatch[1].trim(),
+              image, images: image ? [image] : [], hasImage: !!image,
+              hasVideos: false, hasFiles: false,
+              url: linkMatch ? 'https://admsurgut.ru' + linkMatch[1] : 'https://admsurgut.ru/novosti/',
+              isLong: false, hashtags: []
             });
           }
+          if (posts.length >= 49) break;
         }
-        
-        if (posts.length >= 6) break;
+        if (posts.length >= 49) break;
       }
       
-      console.log('Parsed posts:', posts.length);
-      if (posts.length > 0) return posts;
-    } catch (e) {
-      console.log('Error:', e);
-    }
-
-    return [{
-      id: 1,
-      text: '',
-      shortText: 'Новости администрации Сургута — перейти на сайт',
-      date: '',
-      image: '',
-      images: [],
-      hasImage: false,
-      hasVideos: false,
-      url: 'https://admsurgut.ru/novosti/',
-      isLong: false,
-      hashtags: []
-    }];
+      if (posts.length > 0) {
+        posts.push({
+          id: Math.random(), text: 'Все новости администрации Сургута',
+          shortText: 'Перейти на сайт администрации', date: '',
+          image: '', images: [], hasImage: false, hasVideos: false, hasFiles: false,
+          url: 'https://admsurgut.ru/novosti/', isLong: false, hashtags: []
+        });
+      }
+      
+      return posts.length > 0 ? posts : [{
+        id: 1, text: 'Новости администрации Сургута',
+        shortText: 'Перейти на сайт администрации', date: '',
+        image: '', images: [], hasImage: false, hasVideos: false, hasFiles: false,
+        url: 'https://admsurgut.ru/novosti/', isLong: false, hashtags: []
+      }];
+    } catch (e) { return []; }
   }
 
   get currentPosts() {
@@ -150,6 +156,53 @@ export class Blog implements OnInit {
 
   setTab(tab: 'blog' | 'colleagues' | 'parents' | 'students' | 'inclusive' | 'news') {
     this.activeTab = tab;
+    this.loadMoreIfNeeded(tab);
+  }
+
+  private loadMoreIfNeeded(tab: string) {
+    const all = this.getAllPosts(tab);
+    const displayed = this.getDisplayedPosts(tab);
+    
+    if (displayed.length < all.length && !this.loadingMore) {
+      this.loadingMore = true;
+      setTimeout(() => {
+        const next = all.slice(displayed.length, displayed.length + this.pageSize);
+        switch (tab) {
+          case 'blog': this.blogPosts = [...displayed, ...next]; break;
+          case 'colleagues': this.colleaguesPosts = [...displayed, ...next]; break;
+          case 'parents': this.parentsPosts = [...displayed, ...next]; break;
+          case 'students': this.studentsPosts = [...displayed, ...next]; break;
+          case 'inclusive': this.inclusivePosts = [...displayed, ...next]; break;
+          case 'news': this.newsPosts = [...displayed, ...next]; break;
+        }
+        this.loadingMore = false;
+        this.cdr.detectChanges();
+      }, 100);
+    }
+  }
+
+  private getAllPosts(tab: string): any[] {
+    switch (tab) {
+      case 'blog': return this.allBlogPosts;
+      case 'colleagues': return this.allColleaguesPosts;
+      case 'parents': return this.allParentsPosts;
+      case 'students': return this.allStudentsPosts;
+      case 'inclusive': return this.allInclusivePosts;
+      case 'news': return this.allNewsPosts;
+      default: return [];
+    }
+  }
+
+  private getDisplayedPosts(tab: string): any[] {
+    switch (tab) {
+      case 'blog': return this.blogPosts;
+      case 'colleagues': return this.colleaguesPosts;
+      case 'parents': return this.parentsPosts;
+      case 'students': return this.studentsPosts;
+      case 'inclusive': return this.inclusivePosts;
+      case 'news': return this.newsPosts;
+      default: return [];
+    }
   }
 
   openPost(post: any) {
