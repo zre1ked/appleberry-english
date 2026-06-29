@@ -24,7 +24,7 @@
                         <div class="blog__card-image-overlay"></div>
                         <div class="blog__card-image-count" *ngIf="post.images.length > 1">+{{ post.images.length - 1 }}</div>
                     </div>
-                    <div class="blog__card-video-thumb" *ngIf="!post.hasImage && post.hasVideos">
+                    <div class="blog__card-video-thumb" *ngIf="post.hasVideos">
                         <img [src]="post.videos[0].image" alt="Видео">
                         <div class="blog__card-video-play">▶</div>
                     </div>
@@ -51,6 +51,7 @@
     <div class="post-modal" *ngIf="selectedPost" (click)="closePost()">
         <div class="post-modal__content" (click)="$event.stopPropagation()">
             <button class="post-modal__close" (click)="closePost()">&times;</button>
+            
             <div class="post-modal__gallery" *ngIf="selectedPost.images.length > 0">
                 <div class="post-modal__image-container">
                     <button class="post-modal__nav post-modal__prev" (click)="prevImage()" *ngIf="selectedPost.images.length > 1">‹</button>
@@ -64,13 +65,16 @@
                           (click)="selectImage(i)"></span>
                 </div>
             </div>
+
             <div class="post-modal__videos" *ngIf="selectedPost.hasVideos">
                 <div *ngFor="let video of selectedPost.videos" class="post-modal__video">
                     <iframe [src]="'https://vk.com/video_ext.php?oid=' + video.owner_id + '&id=' + video.id + '&hd=2' | safeUrl" 
                             width="100%" height="400" frameborder="0" 
-                            allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                            allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen>
+                    </iframe>
                 </div>
             </div>
+            
             <div class="post-modal__scrollable">
                 <div class="post-modal__body">
                     <time class="post-modal__date">{{ selectedPost.date }}</time>

@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { VkService } from '../../services/vk.service';
+import { PreloadService } from '../../services/preload.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-gallery',
@@ -13,54 +14,38 @@ export class Gallery implements OnInit {
   isLoading = true;
   
   activeTab: 'main' | 'students' = 'main';
-  
   isLightboxOpen = false;
   selectedImage: any = null;
 
-  constructor(private cdr: ChangeDetectorRef, private vkService: VkService) {}
+  constructor(private cdr: ChangeDetectorRef, private preloadService: PreloadService, private router: Router) {}
 
   ngOnInit() {
-    this.loadGallery();
+    this.showGallery();
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd && e.urlAfterRedirects === '/gallery') {
+        this.showGallery();
+      }
+    });
   }
 
-  async loadGallery() {
+  showGallery() {
     this.isLoading = true;
-    this.cdr.detectChanges();
-    
-    try {
-      const galleryPosts = await this.vkService.getPostsByHashtag('Галерея');
-      const winners = await this.vkService.getPostsByHashtag('Победитель');
-      const prizers = await this.vkService.getPostsByHashtag('Призер');
-      
-      this.mainImages = galleryPosts;
-      this.studentsImages = [...winners, ...prizers].filter((item, index, self) =>
-        index === self.findIndex((t) => t.id === item.id)
-      );
-    } catch (err) {
-      console.error('Error loading gallery:', err);
+    const d = this.preloadService.data;
+    if (!d) {
+      setTimeout(() => this.showGallery(), 200);
+      return;
     }
+    
+    this.mainImages = d.gallery || [];
+    this.studentsImages = [...(d.winners || []), ...(d.prizers || [])]
+      .filter((item, index, self) => index === self.findIndex((t) => t.id === item.id));
     
     this.isLoading = false;
     this.cdr.detectChanges();
   }
 
-  setTab(tab: 'main' | 'students') {
-    this.activeTab = tab;
-  }
-
-  get currentImages() {
-    return this.activeTab === 'main' ? this.mainImages : this.studentsImages;
-  }
-
-  openLightbox(image: any) {
-    this.selectedImage = image;
-    this.isLightboxOpen = true;
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeLightbox() {
-    this.isLightboxOpen = false;
-    this.selectedImage = null;
-    document.body.style.overflow = '';
-  }
+  setTab(tab: 'main' | 'students') { this.activeTab = tab; }
+  get currentImages() { return this.activeTab === 'main' ? this.mainImages : this.studentsImages; }
+  openLightbox(image: any) { this.selectedImage = image; this.isLightboxOpen = true; document.body.style.overflow = 'hidden'; }
+  closeLightbox() { this.isLightboxOpen = false; this.selectedImage = null; document.body.style.overflow = ''; }
 }

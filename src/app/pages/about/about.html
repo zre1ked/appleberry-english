@@ -62,12 +62,12 @@
             <div class="about__achievements">
                 <h2 class="about__achievements-title">Достижения</h2>
                 
-                <div class="about__achievements-loading" *ngIf="isLoadingAchievements">
+                <div class="about__achievements-loading" *ngIf="isLoading">
                     <div class="about__spinner"></div>
                     <p>Загрузка достижений...</p>
                 </div>
-                
-                <div class="about__achievements-list" *ngIf="!isLoadingAchievements && achievements.length > 0">
+
+                <div class="about__achievements-list" *ngIf="!isLoading && achievements.length > 0">
                     <div *ngFor="let achievement of achievements" class="about__achievement-item" (click)="openAchievement(achievement)">
                         <div class="about__achievement-icon">
                             <img *ngIf="!isEmoji(achievement)" [src]="getAchievementIcon(achievement)" alt="Фото достижения">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="about__achievements-empty" *ngIf="!isLoadingAchievements && achievements.length === 0">
+                <div class="about__achievements-empty" *ngIf="!isLoading && achievements.length === 0">
                     <p>Достижения скоро появятся. Следите за обновлениями в VK!</p>
                 </div>
             </div>

@@ -8,12 +8,9 @@ import { PreloadService } from './services/preload.service';
   styleUrl: './app.scss'
 })
 export class App implements OnInit {
-  title = 'teacher-site-angular';
-
   constructor(private preloadService: PreloadService) {}
 
   ngOnInit() {
-    // Запускаем предзагрузку при старте приложения
-    this.preloadService.preload();
+    this.preloadService.load();
   }
 }
